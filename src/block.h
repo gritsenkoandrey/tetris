@@ -7,11 +7,18 @@
 class Block {
 public:
     Block();
-    void Draw();
-    int id = 0;
-    std::map<int, std::vector<Position>> cells = {};
+    void Draw(int offsetX, int offsetY);
+    void Move(int row, int column);
+    void Rotate();
+    void UndoRotation();
+    std::vector<Position> GetCellPosition();
+    int id;
+    std::map<int, std::vector<Position>> cells;
+
 private:
     int cellSize;
     int rotationState;
+    int rowOffset;
+    int columnOffset;
     std::vector<Color> colors;
 };
