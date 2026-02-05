@@ -1,32 +1,32 @@
 ﻿#pragma once
+#include "audio.h"
 #include "blocks.cpp"
 #include "grid.h"
 
 class Game {
 public:
-    Game();
-    ~Game();
+    explicit Game(const Audio &audio);
     void Draw();
     void HandleInput();
     void MoveBlockDown();
-    bool isGameOver;
-    int score;
-    Music music;
+    [[nodiscard]] int GetScore() const;
+    [[nodiscard]] bool IsGameOver() const;
 private:
     Block GetRandomBlock();
     static std::vector<Block> GetAllBlocks();
-    bool IsBlockOutside();
     void RotateBlock();
     void MoveBlockLeft();
     void MoveBlockRight();
     void LockBlock();
     void Reset();
-    bool IsValidPosition();
     void UpdateScore(int linesCleared, int moveDownPoints);
+    bool IsBlockOutside();
+    bool IsValidPosition();
+    bool isGameOver;
+    int score;
     Grid grid;
     std::vector<Block> blocks;
     Block currentBlock;
     Block nextBlock;
-    Sound rotateSound;
-    Sound clearSound;
+    const Audio &audio;
 };

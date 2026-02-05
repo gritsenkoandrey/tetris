@@ -1,11 +1,14 @@
 ﻿#include "block.h"
+#include "colors.h"
+#include <raylib.h>
 
 Block::Block() {
     cellSize = 30;
     rotationState = 0;
-    colors = GetCellColors();
     rowOffset = 0;
     columnOffset = 0;
+    id = 0;
+    colors = GetCellColors();
 }
 
 void Block::Draw(const int offsetX, const int offsetY) {
@@ -48,4 +51,8 @@ void Block::UndoRotation() {
     if (rotationState == -1) {
         rotationState = static_cast<int>(cells.size() - 1);
     }
+}
+
+int Block::GetId() const{
+    return id;
 }

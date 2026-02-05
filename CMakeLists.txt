@@ -24,6 +24,10 @@ add_executable(Tetris src/main.cpp
         src/blocks.cpp
         src/game.h
         src/game.cpp
+        src/random.h
+        src/random.cpp
+        src/audio.h
+        src/audio.cpp
 )
 target_link_libraries(Tetris PRIVATE raylib)
 

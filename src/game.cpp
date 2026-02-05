@@ -1,34 +1,23 @@
 ﻿#include "game.h"
 #include "block.h"
-#include <random>
+#include "random.h"
+#include "audio.h"
 #include <raylib.h>
 
-Game::Game() {
+Game::Game(const Audio &audio) : audio(audio) {
     grid = Grid();
     blocks = GetAllBlocks();
     currentBlock = GetRandomBlock();
     nextBlock = GetRandomBlock();
     isGameOver = false;
     score = 0;
-    InitAudioDevice();
-    music = LoadMusicStream("Sounds/music.mp3");
-    rotateSound = LoadSound("Sounds/rotate.mp3");
-    clearSound = LoadSound("Sounds/clear.mp3");
-    PlayMusicStream(music);
-}
-
-Game::~Game() {
-    UnloadMusicStream(music);
-    UnloadSound(rotateSound);
-    UnloadSound(clearSound);
-    CloseAudioDevice();
 }
 
 Block Game::GetRandomBlock() {
     if (blocks.empty()) {
         blocks = GetAllBlocks();
     }
-    const int randomIndex = rand() % blocks.size();
+    const int randomIndex = Random::GetRandomInt(0, static_cast<int>(blocks.size()) - 1);
     Block block = blocks[randomIndex];
     blocks.erase(blocks.begin() + randomIndex);
     return block;
@@ -42,7 +31,7 @@ void Game::Draw() {
     grid.Draw(11, 11);
     currentBlock.Draw(11, 11);
 
-    switch (nextBlock.id) {
+    switch (nextBlock.GetId()) {
         case 3:
             nextBlock.Draw(255, 290);
             break;
@@ -113,6 +102,14 @@ void Game::MoveBlockDown() {
     }
 }
 
+int Game::GetScore() const {
+    return score;
+}
+
+bool Game::IsGameOver() const {
+    return isGameOver;
+}
+
 void Game::RotateBlock() {
     if (isGameOver) {
         return;
@@ -122,23 +119,23 @@ void Game::RotateBlock() {
         currentBlock.UndoRotation();
     }
     else {
-        PlaySound(rotateSound);
+        PlaySound(audio.GetRotate());
     }
 }
 
 void Game::LockBlock() {
     for (const auto tile: currentBlock.GetCellPosition()) {
-        grid.SetGridCell(tile.row, tile.column, currentBlock.id);
+        grid.SetGridCell(tile.row, tile.column, currentBlock.GetId());
     }
     currentBlock = nextBlock;
     if (IsValidPosition() == false) {
         isGameOver = true;
     }
     nextBlock = GetRandomBlock();
-    const int rowCleared = grid.ClearFullRows();
-    if (rowCleared > 0) {
-        PlaySound(clearSound);
-        UpdateScore(rowCleared, 0);
+
+    if (const int cleared = grid.ClearFullRows(); cleared > 0) {
+        PlaySound(audio.GetClear());
+        UpdateScore(cleared, 0);
     }
 }
 
@@ -151,8 +148,9 @@ void Game::Reset() {
 }
 
 bool Game::IsValidPosition() {
-    for (const auto tile: currentBlock.GetCellPosition()) {
-        if (grid.IsCellEmpty(tile.row, tile.column) == false) {
+    const std::vector<Position> tiles = currentBlock.GetCellPosition();
+    for (int i = 0; i < tiles.capacity(); ++i) {
+        if (grid.IsCellEmpty(tiles[i].row, tiles[i].column) == false) {
             return false;
         }
     }
@@ -181,8 +179,9 @@ void Game::UpdateScore(const int linesCleared, const int moveDownPoints) {
 }
 
 bool Game::IsBlockOutside()  {
-    for (const auto tile: currentBlock.GetCellPosition()) {
-        if (grid.IsCellOutside(tile.row, tile.column)) {
+    const std::vector<Position> tiles = currentBlock.GetCellPosition();
+    for (int i = 0; i < tiles.capacity(); ++i) {
+        if (grid.IsCellOutside(tiles[i].row, tiles[i].column)) {
             return true;
         }
     }

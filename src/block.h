@@ -1,8 +1,8 @@
 ﻿#pragma once
 #include <vector>
 #include <map>
+#include <raylib.h>
 #include "position.h"
-#include "colors.h"
 
 class Block {
 public:
@@ -11,7 +11,10 @@ public:
     void Move(int row, int column);
     void Rotate();
     void UndoRotation();
+    [[nodiscard]] int GetId() const;
     std::vector<Position> GetCellPosition();
+
+protected:
     int id;
     std::map<int, std::vector<Position>> cells;
 

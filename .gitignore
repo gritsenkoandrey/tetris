@@ -40,5 +40,10 @@
 # debug information files
 *.dwo
 
-# rider
+# ide
 *.idea
+*.vscode/
+
+# build files
+*cmake-build-debug/
+*build/
