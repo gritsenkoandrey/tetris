@@ -29,7 +29,7 @@ add_executable(Tetris src/main.cpp
         src/audio.h
         src/audio.cpp
 )
-target_link_libraries(Tetris PRIVATE raylib)
+target_link_libraries(Tetris PRIVATE raylib -static)
 
 file(COPY Sounds DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
 file(COPY Font DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
