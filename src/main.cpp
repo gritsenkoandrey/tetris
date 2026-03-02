@@ -44,7 +44,7 @@ int main()
         }
         DrawRectangleRounded({320, 55, 170, 60}, 0.3f, 6, lightBlue);
         std::string scoreText = std::to_string(game.GetScore());
-        float sizeX = MeasureTextEx(font, scoreText.c_str(), 38, 2).x;
+        const float sizeX = MeasureTextEx(font, scoreText.c_str(), 38, 2).x;
         DrawTextEx(font, scoreText.c_str(), {320 + (170 - sizeX) / 2, 65}, 38, 2, WHITE);
         DrawRectangleRounded({320, 215, 170, 180}, 0.3f, 6, lightBlue);
 
