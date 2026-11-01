@@ -1,4 +1,4 @@
-﻿cmake_minimum_required(VERSION 3.20)
+cmake_minimum_required(VERSION 3.20)
 project(Tetris)
 
 set(CMAKE_CXX_STANDARD 20)
@@ -29,7 +29,7 @@ add_executable(Tetris src/main.cpp
         src/audio.h
         src/audio.cpp
 )
-target_link_libraries(Tetris PRIVATE raylib -static)
+target_link_libraries(Tetris PRIVATE raylib)
 
 file(COPY Sounds DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
 file(COPY Font DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
